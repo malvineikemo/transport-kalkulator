@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EE Transport Kalkulator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #6200EE;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .switch-container {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .switch-container input {
+            margin-left: 10px;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #6200EE;
+            color: white;
+            border: none;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>EE Transport Kalkulator</h1>
+    <label for="kmInput">Antall km (én vei):</label>
+    <input type="number" id="kmInput" placeholder="f.eks. 180">
+
+    <div class="switch-container">
+        <label for="hengerSwitch">Bruker henger:</label>
+        <input type="checkbox" id="hengerSwitch">
+    </div>
+
+    <button onclick="calculatePrice()">Beregn pris</button>
+
+    <div id="result">Pris: -</div>
+
+    <script>
+        function calculatePrice() {
+            const kmStr = document.getElementById("kmInput").value.trim();
+            const henger = document.getElementById("hengerSwitch").checked;
+            const resultDiv = document.getElementById("result");
+
+            if (kmStr === "") {
+                resultDiv.textContent = "Fyll inn antall km (én vei)";
+                return;
+            }
+
+            const km = parseFloat(kmStr);
+            if (isNaN(km) || km < 0) {
+                resultDiv.textContent = "Ugyldig km‑verdi";
+                return;
+            }
+
+            const baseNoHenger = 3100;
+            const baseHenger = 3800;
+            const perKmNoHenger = 35.0;
+            const perKmHenger = 50.0;
+
+            let price = 0;
+            if (henger) {
+                price = km <= 20 ? baseHenger : baseHenger + Math.round((km - 20) * perKmHenger);
+            } else {
+                price = km <= 20 ? baseNoHenger : baseNoHenger + Math.round((km - 20) * perKmNoHenger);
+            }
+
+            resultDiv.textContent = "Pris: kr " + price.toLocaleString("no-NO");
+        }
+    </script>
+</body>
+</html>
